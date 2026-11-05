@@ -100,8 +100,9 @@ function BookingForm({
           ...(notes.trim() ? { notes: notes.trim() } : {}),
         }),
       });
-      toast.success("Booking request sent! It is now Pending host approval.");
+            toast.success("Booking request sent! It is now Pending host approval.");
       onClose();
+      router.push("/my-bookings");
     } catch (err) {
       if (err instanceof ApiRequestError && err.status === 401) {
         toast.error("Your session has expired. Please log in again.");

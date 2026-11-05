@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StudioSpace
 
-## Getting Started
+**Live site:** <https://your-client.vercel.app>
+**Server repository:** <https://github.com/your-username/studiospace-server>
+**API:** <https://your-api.onrender.com>
 
-First, run the development server:
+StudioSpace is a peer-to-peer marketplace where creators book photo studios, sound stages, podcast rooms, music suites and art workshops by the hour, and hosts list their spaces and manage requests.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Hero slider (Swiper), featured studios loaded from MongoDB with `.limit(6)`, category browsing and two extra home sections.
+- Explore page with search, category, price and rating filters, sorting, pagination, skeleton loaders and empty states. Filters live in the URL.
+- Studio details with gallery carousel, amenities, host info, reviews and a booking modal with live pricing.
+- Full studio CRUD (add, my listings, update, delete with a confirmation modal) and imgbb image upload.
+- Booking system with Pending, Confirmed, Completed and Cancelled statuses, guest cancellation and host confirm/decline.
+- **Challenge 1:** Better Auth sessions in HTTPOnly cookies, short-lived JWTs minted server-side and verified by Express through JWKS. Unauthorized requests get `401`.
+- **Challenge 2:** Double-booking prevention. Overlap with a Confirmed booking is rejected with `409` and a clear message.
+- **Challenge 3:** Light and dark theme toggle that restyles the whole app and remembers the choice.
+- **Optional:** PDF booking invoices and a saved-studios wishlist.
+- Toast notifications (react-hot-toast) and custom modals everywhere, no browser alerts.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, DaisyUI 5, Better Auth (MongoDB adapter, JWT plugin), Swiper, react-hot-toast, jsPDF. Server: Express, TypeScript, MongoDB, jose, zod.
 
-## Learn More
+## Local setup
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Clone the repo and run `npm install`.
+2. Create `.env.local`:

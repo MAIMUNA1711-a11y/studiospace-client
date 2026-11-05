@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FaLocationDot, FaStar } from "react-icons/fa6";
 import StudioImage from "@/components/ui/StudioImage";
+import WishlistButton from "@/components/studio/WishlistButton";
 import type { Studio } from "@/types";
 
 export default function StudioCard({ studio }: { studio: Studio }) {
@@ -19,6 +20,7 @@ export default function StudioCard({ studio }: { studio: Studio }) {
           <FaStar className="text-warning" />
           {studio.rating > 0 ? studio.rating.toFixed(1) : "New"}
         </span>
+        <WishlistButton studioId={studio._id} />
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-5">

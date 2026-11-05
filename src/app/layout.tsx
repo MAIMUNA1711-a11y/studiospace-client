@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import WishlistProvider from "@/providers/WishlistProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -26,9 +27,11 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="flex min-h-screen flex-col antialiased">
-        <Navbar />
-        <div className="flex-1">{children}</div>
-        <Footer />
+        <WishlistProvider>
+          <Navbar />
+          <div className="flex-1">{children}</div>
+          <Footer />
+        </WishlistProvider>
         <Toaster
           position="top-right"
           toastOptions={{

@@ -2,6 +2,7 @@
 
 @plugin "daisyui" {
   themes: false;
+  exclude: join;
 }
 
 @plugin "daisyui/theme" {

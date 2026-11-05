@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -11,6 +13,8 @@ export const metadata: Metadata = {
     "StudioSpace is a peer-to-peer marketplace where creators book photo studios, sound stages, podcast rooms, music suites and art workshops by the hour.",
 };
 
+const themeScript = `try{var t=localStorage.getItem("studiospace-theme");if(t==="studiolight"||t==="studiodark"){document.documentElement.setAttribute("data-theme",t)}else if(window.matchMedia("(prefers-color-scheme: dark)").matches){document.documentElement.setAttribute("data-theme","studiodark")}}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: {
@@ -18,8 +22,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" data-theme="studiolight" suppressHydrationWarning>
-      <body className="min-h-screen antialiased">
-        {children}
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="flex min-h-screen flex-col antialiased">
+        <Navbar />
+        <div className="flex-1">{children}</div>
+        <Footer />
         <Toaster
           position="top-right"
           toastOptions={{
@@ -34,6 +43,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-  
 }
-

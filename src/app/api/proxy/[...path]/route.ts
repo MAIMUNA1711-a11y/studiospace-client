@@ -14,7 +14,7 @@ async function handler(req: NextRequest, ctx: Ctx) {
     );
   }
 
-  // 1. Session cookie theke JWT Token ber korar chesta
+  // 1. Better Auth thiye token parse korar chesta
   let token: string | undefined;
   try {
     const res = await auth.api.getToken({ headers: req.headers });
@@ -23,23 +23,9 @@ async function handler(req: NextRequest, ctx: Ctx) {
     token = undefined;
   }
 
-  // Request Headers toiri kora
-  const headersToSend: Record<string, string> = {
-    "Content-Type": "application/json",
-  };
-
-  // 2. Token thakle Bearer header set kora
-  if (token) {
-    headersToSend["Authorization"] = `Bearer ${token}`;
-  }
-
-  // 3. Fallback: Raw Session Cookie extract kore backward compatibility render-e pathano
   const incomingCookie = req.headers.get("cookie");
-  if (incomingCookie) {
-    headersToSend["Cookie"] = incomingCookie;
-  }
 
-  // Token ebong Cookie konoti-i na thakle 401
+  // 2. Token othoba Cookie-r moddhe konoti e na thakle tokhon e shudhu 401 dibe
   if (!token && !incomingCookie) {
     return NextResponse.json(
       { success: false, message: "Authentication required" },
@@ -47,10 +33,21 @@ async function handler(req: NextRequest, ctx: Ctx) {
     );
   }
 
+  const headersToSend: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headersToSend["Authorization"] = `Bearer ${token}`;
+  }
+
+  if (incomingCookie) {
+    headersToSend["Cookie"] = incomingCookie;
+  }
+
   const hasBody = !["GET", "HEAD"].includes(req.method);
   let upstream: Response;
 
-  // Path sanitize to prevent double slashes (//)
   const cleanPath = path.join("/");
   const targetUrl = `${API_URL}/${cleanPath}${req.nextUrl.search}`;
 

@@ -6,8 +6,9 @@ import type {
   TimeSlot,
 } from "@/types";
 
-export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api";
+// Extra trailing slash (/) soriy e clean Base URL toiri kora
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api";
+export const API_URL = rawApiUrl.replace(/\/+$/, "");
 
 export class ApiRequestError extends Error {
   status: number;
@@ -27,8 +28,13 @@ interface Envelope<T> {
 
 async function request<T>(path: string): Promise<Envelope<T>> {
   let res: Response;
+  
+  // Ensure single slash between base URL and path
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const fullUrl = `${API_URL}${normalizedPath}`;
+
   try {
-    res = await fetch(`${API_URL}${path}`, { cache: "no-store" });
+    res = await fetch(fullUrl, { cache: "no-store" });
   } catch {
     throw new ApiRequestError(
       "Cannot reach the server. Please check your connection and try again.",

@@ -13,20 +13,11 @@ async function handler(req: NextRequest, ctx: Ctx) {
     );
   }
 
-  const incomingCookie = req.headers.get("cookie");
-  const incomingAuth = req.headers.get("authorization");
+  // Client request-er sob headers copy kora
+  const headersToSend = new Headers(req.headers);
 
-  const headersToSend: Record<string, string> = {
-    "Content-Type": "application/json",
-  };
-
-  if (incomingAuth) {
-    headersToSend["Authorization"] = incomingAuth;
-  }
-
-  if (incomingCookie) {
-    headersToSend["Cookie"] = incomingCookie;
-  }
+  // Target host header delete kora jate fetch failure na hoy
+  headersToSend.delete("host");
 
   const hasBody = !["GET", "HEAD"].includes(req.method);
   let upstream: Response;
@@ -58,6 +49,6 @@ export {
   handler as GET,
   handler as POST,
   handler as PUT,
-  handler as PATCH,
   handler as DELETE,
+  handler as PATCH,
 };

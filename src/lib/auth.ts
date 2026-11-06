@@ -13,17 +13,20 @@ const client = globalForMongo._mongoClient ?? new MongoClient(uri);
 if (process.env.NODE_ENV !== "production") globalForMongo._mongoClient = client;
 
 const db = client.db(process.env.MONGODB_DB_NAME ?? "studiospace");
-const baseURL = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+
+// Trailing slash (/) clean kora Base URL
+const rawBaseURL = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+const baseURL = rawBaseURL.replace(/\/+$/, "");
 
 // Vercel-er alada alada domain (production alias, preview) ke trust kori
-const trustedOrigins = new Set<string>([baseURL.replace(/\/+$/, "")]);
+const trustedOrigins = new Set<string>([baseURL]);
 
 [
   process.env.VERCEL_URL,
   process.env.VERCEL_BRANCH_URL,
   process.env.VERCEL_PROJECT_PRODUCTION_URL,
 ].forEach((host) => {
-  if (host) trustedOrigins.add(`https://${host}`);
+  if (host) trustedOrigins.add(`https://${host.replace(/\/+$/, "")}`);
 });
 
 (process.env.EXTRA_TRUSTED_ORIGINS ?? "")

@@ -15,12 +15,30 @@ if (process.env.NODE_ENV !== "production") globalForMongo._mongoClient = client;
 const db = client.db(process.env.MONGODB_DB_NAME ?? "studiospace");
 const baseURL = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
 
+// Vercel-er alada alada domain (production alias, preview) ke trust kori
+const trustedOrigins = new Set<string>([baseURL.replace(/\/+$/, "")]);
+
+[
+  process.env.VERCEL_URL,
+  process.env.VERCEL_BRANCH_URL,
+  process.env.VERCEL_PROJECT_PRODUCTION_URL,
+].forEach((host) => {
+  if (host) trustedOrigins.add(`https://${host}`);
+});
+
+(process.env.EXTRA_TRUSTED_ORIGINS ?? "")
+  .split(",")
+  .map((o) => o.trim().replace(/\/+$/, ""))
+  .filter(Boolean)
+  .forEach((o) => trustedOrigins.add(o));
+
 const googleConfigured =
   !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET;
 
 export const auth = betterAuth({
   baseURL,
   secret: process.env.BETTER_AUTH_SECRET,
+  trustedOrigins: [...trustedOrigins], // Dynamic trusted origins add kora holo
   database: mongodbAdapter(db),
   emailAndPassword: {
     enabled: true,
